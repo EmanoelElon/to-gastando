@@ -1,5 +1,6 @@
 :root {
   --bg-color: #0f172a;
+  --page-selected: #0f172a00;
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --accent-color: #6366f1;
@@ -9,7 +10,7 @@
   --card-bg: rgba(30, 41, 59, 0.7);
   --card-border: rgba(255, 255, 255, 0.1);
   --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-  
+
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -20,7 +21,7 @@ body {
   margin: 0;
   min-height: 100vh;
   background-color: var(--bg-color);
-  background-image: 
+  background-image:
     radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
     radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
   background-attachment: fixed;
@@ -46,10 +47,16 @@ body {
 }
 
 /* Base Elements */
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   margin-top: 0;
   color: var(--text-primary);
   font-weight: 700;
+}
+
+m-b-0 {
+  margin-bottom: 0;
 }
 
 button {
@@ -74,6 +81,7 @@ button:hover {
 button.danger {
   background-color: var(--danger-color);
 }
+
 button.danger:hover {
   background-color: var(--danger-hover);
 }
@@ -83,11 +91,14 @@ button.outline {
   border: 1px solid var(--card-border);
   color: var(--text-primary);
 }
+
 button.outline:hover {
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-input, select, textarea {
+input,
+select,
+textarea {
   width: 100%;
   padding: 0.75rem 1rem;
   background: rgba(15, 23, 42, 0.6);
@@ -105,15 +116,24 @@ textarea {
   min-height: 80px;
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus,
+textarea:focus {
   outline: none;
   border-color: var(--accent-color);
 }
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
@@ -121,23 +141,129 @@ input:focus, select:focus, textarea:focus {
 }
 
 /* Utility classes */
-.text-secondary { color: var(--text-secondary); }
-.text-accent { color: var(--accent-color); }
-.flex { display: flex; }
-.justify-between { justify-content: space-between; }
-.items-center { align-items: center; }
-.gap-4 { gap: 1rem; }
-.mt-4 { margin-top: 1rem; }
-.mt-8 { margin-top: 2rem; }
-.mb-4 { margin-bottom: 1rem; }
-.p-6 { padding: 1.5rem; }
-.w-full { width: 100%; }
-.grid { display: grid; }
-.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
-.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.page-selected {
+  background-color: var(--page-selected);
+}
+
+.text-accent {
+  color: var(--accent-color);
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.gap-6 {
+  gap: 1.5rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+
+.p-5 {
+  padding: 1.25rem;
+}
+
+.p-6 {
+  padding: 1.5rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.grid {
+  display: grid;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (min-width: 769px) {
+  .md\:flex-row {
+    flex-direction: row;
+  }
+
+  .md\:items-center {
+    align-items: center;
+  }
+
+  .md\:w-auto {
+    width: auto;
+  }
+}
 
 @media (max-width: 768px) {
-  .grid-cols-2, .grid-cols-3 {
+
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
     grid-template-columns: 1fr;
   }
 }

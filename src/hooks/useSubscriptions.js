@@ -3,10 +3,7 @@ import { useState, useEffect } from 'react';
 export function useSubscriptions() {
   const [subscriptions, setSubscriptions] = useState(() => {
     const saved = localStorage.getItem('subscriptions');
-    if (saved) {
-      return JSON.parse(saved);
-    }
-    return [];
+    return saved ? JSON.parse(saved) : [];
   });
 
   useEffect(() => {

@@ -41,7 +41,7 @@ export function DashboardSummary({ subscriptions, income, onEditIncome }) {
         </div>
       )}
 
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-2 gap-4 mb-4">
         <div className="glass p-6 animate-fade-in flex items-center justify-between" style={{ animationDelay: '0.1s' }}>
           <div>
             <p className="text-secondary text-sm">Gasto Mensal Estimado</p>

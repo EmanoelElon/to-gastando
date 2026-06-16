@@ -9,8 +9,15 @@ export function useIncome() {
   const saveIncome = (value) => {
     const numValue = parseFloat(value);
     setIncome(numValue);
-    localStorage.setItem('user_income', numValue.toString());
   };
+
+  useEffect(() => {
+    if (income !== null) {
+      localStorage.setItem('user_income', income.toString());
+    } else {
+      localStorage.removeItem('user_income');
+    }
+  }, [income]);
 
   return { income, saveIncome };
 }
