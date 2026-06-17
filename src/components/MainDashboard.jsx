@@ -255,7 +255,7 @@ export function MainDashboard() {
             <p>Nenhuma transação registrada ainda.</p>
           </div>
         ) : (
-          <div className="grid gap-0">
+          <div className="grid gap-4">
             {recentTransactions.map(t => (
               <TransactionCard
                 key={t.id}

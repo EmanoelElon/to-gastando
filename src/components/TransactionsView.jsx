@@ -113,7 +113,7 @@ export function TransactionsView() {
           <p>Nenhuma transação registrada ainda.</p>
         </div>
       ) : (
-        <div className="grid gap-0">
+        <div className="grid gap-4">
           {[...transactions].reverse().map(t => (
             <TransactionCard
               key={t.id}
