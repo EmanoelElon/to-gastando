@@ -223,13 +223,13 @@ export function MainDashboard() {
         <div className="space-y-4">
           <h3 className="text-lg text-secondary mb-4">Próximos Vencimentos</h3>
           {upcomingSubscriptions.length === 0 ? (
-            <div className="glass p-6 text-center text-secondary">
+            <div className="glass p-4 text-center text-secondary">
               <p>Nenhuma conta fixa para vencer em breve.</p>
             </div>
           ) : (
             <div className="grid gap-4">
               {upcomingSubscriptions.map(sub => (
-                <div key={sub.id} className="glass p-4 flex justify-between items-center border-l-2 border-accent-color">
+                <div key={sub.id} className="glass p-5 flex justify-between items-center border-l-2 border-accent-color">
                   <div>
                     <h4 className="m-0 text-md">{sub.name}</h4>
                     <p className="text-xs text-secondary m-0 mt-1 flex items-center gap-1">

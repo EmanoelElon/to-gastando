@@ -42,7 +42,7 @@ export function SubscriptionCard({ subscription, onDelete, onEdit }) {
         </p>
       </div>
       <div className="flex gap-6 items-center">
-        <div className="flex gap-8">
+        <div className="flex gap-2">
           <button
             className="outline"
             onClick={() => onEdit(subscription)}

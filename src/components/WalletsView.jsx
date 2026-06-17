@@ -94,11 +94,11 @@ export function WalletsView() {
         <h3 className="text-xl mb-4 border-b border-white/10 pb-2">Histórico desta Carteira</h3>
 
         {walletTransactions.length === 0 ? (
-          <div className="glass p-8 text-center text-secondary">
+          <div className="glass p-5 text-center text-secondary">
             <p>Nenhuma transação registrada nesta carteira ainda.</p>
           </div>
         ) : (
-          <div className="grid gap-0">
+          <div className="grid gap-4">
             {[...walletTransactions].reverse().map(t => (
               <TransactionCard
                 key={t.id}

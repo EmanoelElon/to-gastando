@@ -68,7 +68,7 @@ export function SubscriptionForm({ initialData, onSave, onClose }) {
       <div className="flex gap-2 mb-6 border-b border-white/10 pb-2">
         <button 
           type="button"
-          className={`px-4 py-2 bg-transparent ${activeTab === 'monthly' ? 'text-accent border-b-2 border-accent-color' : 'text-secondary hover:text-white'}`}
+          className={`px-4 py-2 bg-transparent ${activeTab === 'monthly' ? 'page-selected text-white border-b-2 bg-white border-accent-color' : 'text-white hover:text-white'}`}
           style={{ borderRadius: 0, paddingBottom: '0.5rem' }}
           onClick={() => { setActiveTab('monthly'); setFormData({...formData, cycle: 'monthly'}) }}
         >
@@ -76,7 +76,7 @@ export function SubscriptionForm({ initialData, onSave, onClose }) {
         </button>
         <button 
           type="button"
-          className={`px-4 py-2 bg-transparent ${activeTab === 'annual' ? 'text-accent border-b-2 border-accent-color' : 'text-secondary hover:text-white'}`}
+          className={`px-4 py-2 text-white bg-transparent ${activeTab === 'annual' ? 'page-selected text-white border-b-2 border-accent-color' : 'text-white hover:text-white'}`}
           style={{ borderRadius: 0, paddingBottom: '0.5rem' }}
           onClick={() => { setActiveTab('annual'); setFormData({...formData, cycle: 'annual'}) }}
         >
