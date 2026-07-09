@@ -1,5 +1,5 @@
-import React from 'react';
 import { Trash2, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { formatCurrency } from '../utils/finance';
 
 export function TransactionCard({ transaction, onDelete }) {
   const isIncome = transaction.type === 'income';
@@ -23,7 +23,7 @@ export function TransactionCard({ transaction, onDelete }) {
       <div className="flex items-center gap-4">
         <div className="text-right">
           <p className={`text-lg font-bold`} style={{ color: isIncome ? '#10b981' : '#ef4444' }}>
-            {isIncome ? '+' : '-'}{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(amount)}
+            {isIncome ? '+' : '-'}{formatCurrency(amount)}
           </p>
         </div>
         <button 

@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useWallets } from '../hooks/useWallets';
 import { useTransactions } from '../hooks/useTransactions';
 import { useSubscriptions } from '../hooks/useSubscriptions';
 import { useIncome } from '../hooks/useIncome';
-import { WalletCards, CreditCard, PiggyBank, TrendingUp, TrendingDown, Calendar, AlertCircle, PlusCircle } from 'lucide-react';
+import { WalletCards, CreditCard, PiggyBank, TrendingUp, TrendingDown, Calendar, PlusCircle } from 'lucide-react';
 import { TransactionCard } from './TransactionCard';
-import { SubscriptionCard } from './SubscriptionCard';
 import { TransactionForm } from './TransactionForm';
 import { SubscriptionForm } from './SubscriptionForm';
 import { WalletForm } from './WalletForm';
+import { formatCurrency, getBalanceByType, getSubscriptionTotals, getIncomeCommitmentPercentage } from '../utils/finance';
 
 export function MainDashboard() {
   const [activeForm, setActiveForm] = useState(null);
@@ -19,24 +19,9 @@ export function MainDashboard() {
   const { income } = useIncome();
 
   // 1. Saldos por Tipo de Carteira
-  const getBalanceByType = (type) => {
-    const typeWallets = wallets.filter(w => w.type === type);
-    let balance = typeWallets.reduce((acc, w) => acc + (parseFloat(w.initialBalance) || 0), 0);
-
-    transactions.forEach(t => {
-      const wallet = wallets.find(w => w.id === t.walletId);
-      if (wallet && wallet.type === type) {
-        const val = parseFloat(t.amount) || 0;
-        if (t.type === 'income') balance += val;
-        else balance -= val;
-      }
-    });
-    return balance;
-  };
-
-  const debitBalance = getBalanceByType('debit');
-  const creditBalance = getBalanceByType('credit');
-  const investmentBalance = getBalanceByType('investment');
+  const debitBalance = getBalanceByType('debit', wallets, transactions);
+  const creditBalance = getBalanceByType('credit', wallets, transactions);
+  const investmentBalance = getBalanceByType('investment', wallets, transactions);
 
   // 2. Visão do Mês Atual
   const today = new Date();
@@ -58,14 +43,8 @@ export function MainDashboard() {
   });
 
   // 3. Comprometimento de Renda
-  const totalMonthlySubscriptions = subscriptions.reduce((acc, sub) => {
-    const price = parseFloat(sub.price) || 0;
-    if (sub.cycle === 'monthly') return acc + price;
-    if (sub.cycle === 'annual') return acc + (price / 12);
-    return acc;
-  }, 0);
-
-  const percentageSpent = income && income > 0 ? ((totalMonthlySubscriptions / income) * 100).toFixed(1) : 0;
+  const { totalMonthly: totalMonthlySubscriptions } = getSubscriptionTotals(subscriptions);
+  const percentageSpent = getIncomeCommitmentPercentage(totalMonthlySubscriptions, income);
 
   // 4. Próximos Vencimentos
   // Algoritmo simples: Ordenar as assinaturas mensais cujo dueDay > currentDay
@@ -139,7 +118,7 @@ export function MainDashboard() {
             <WalletCards size={18} style={{ color: '#6366f1' }} />
           </div>
           <h2 className="text-2xl m-0" style={{ color: debitBalance < 0 ? '#ef4444' : '#6366f1' }}>
-            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(debitBalance)}
+            {formatCurrency(debitBalance)}
           </h2>
         </div>
 
@@ -149,7 +128,7 @@ export function MainDashboard() {
             <CreditCard size={18} style={{ color: '#f59e0b' }} />
           </div>
           <h2 className="text-2xl m-0" style={{ color: creditBalance < 0 ? '#ef4444' : '#f59e0b' }}>
-            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(creditBalance)}
+            {formatCurrency(creditBalance)}
           </h2>
         </div>
 
@@ -159,7 +138,7 @@ export function MainDashboard() {
             <PiggyBank size={18} style={{ color: '#10b981' }} />
           </div>
           <h2 className="text-2xl m-0" style={{ color: investmentBalance < 0 ? '#ef4444' : '#10b981' }}>
-            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(investmentBalance)}
+            {formatCurrency(investmentBalance)}
           </h2>
         </div>
       </div>
@@ -178,7 +157,7 @@ export function MainDashboard() {
                     <TrendingUp size={24} />
                   </div>
                   <h2 className="text-xl" style={{ color: '#10b981' }}>
-                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(thisMonthIncome)}
+                    {formatCurrency(thisMonthIncome)}
                   </h2>
                 </div>
 
@@ -190,7 +169,7 @@ export function MainDashboard() {
                     <TrendingDown size={24} />
                   </div>
                   <h2 className="text-xl" style={{ color: '#ef4444' }}>
-                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(thisMonthExpense)}
+                    {formatCurrency(thisMonthExpense)}
                   </h2>
                 </div>
 
@@ -205,7 +184,7 @@ export function MainDashboard() {
                 <p className="text-secondary text-sm">Sua Renda Mensal</p>
                 <div className="flex items-center gap-3">
                   <h2 className="text-2xl">
-                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(income || 0)}
+                    {formatCurrency(income || 0)}
                   </h2>
                 </div>
               </div>
@@ -223,7 +202,7 @@ export function MainDashboard() {
         <div className="space-y-4">
           <h3 className="text-lg text-secondary mb-4">Próximos Vencimentos</h3>
           {upcomingSubscriptions.length === 0 ? (
-            <div className="glass p-4 text-center text-secondary">
+            <div className="glass p-5 text-center text-secondary">
               <p>Nenhuma conta fixa para vencer em breve.</p>
             </div>
           ) : (
@@ -237,7 +216,7 @@ export function MainDashboard() {
                     </p>
                   </div>
                   <p className="font-bold text-sm">
-                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(sub.price)}
+                    {formatCurrency(sub.price)}
                   </p>
                 </div>
               ))}

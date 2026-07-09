@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
 import { useSubscriptions } from './hooks/useSubscriptions';
 import { useIncome } from './hooks/useIncome';

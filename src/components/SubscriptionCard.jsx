@@ -1,6 +1,6 @@
-import React from 'react';
 import { Pencil, Trash2, WalletCards } from 'lucide-react';
 import { useWallets } from '../hooks/useWallets';
+import { formatCurrency } from '../utils/finance';
 
 export function SubscriptionCard({ subscription, onDelete, onEdit }) {
   const { wallets } = useWallets();
@@ -35,7 +35,7 @@ export function SubscriptionCard({ subscription, onDelete, onEdit }) {
 
       <div className="text-right flex items-center">
         <p className="text-xl font-bold">
-          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price)}
+          {formatCurrency(price)}
         </p>
         <p className="text-secondary text-xs">
           / {subscription.cycle === 'monthly' ? 'mês' : 'ano'}

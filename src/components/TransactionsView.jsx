@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { PlusCircle, TrendingUp, TrendingDown, WalletCards } from 'lucide-react';
 import { useTransactions } from '../hooks/useTransactions';
 import { useWallets } from '../hooks/useWallets';
 import { TransactionForm } from './TransactionForm';
 import { TransactionCard } from './TransactionCard';
+import { formatCurrency, getBalanceByType } from '../utils/finance';
 
 export function TransactionsView() {
   const { transactions, addTransaction, deleteTransaction } = useTransactions();
@@ -18,24 +19,8 @@ export function TransactionsView() {
     return acc;
   }, { totalIncome: 0, totalExpense: 0 });
 
-  // Calcula os saldos específicos por tipo de carteira
-  const getBalanceByType = (type) => {
-    const typeWallets = wallets.filter(w => w.type === type);
-    let balance = typeWallets.reduce((acc, w) => acc + (parseFloat(w.initialBalance) || 0), 0);
-
-    transactions.forEach(t => {
-      const wallet = wallets.find(w => w.id === t.walletId);
-      if (wallet && wallet.type === type) {
-        const val = parseFloat(t.amount) || 0;
-        if (t.type === 'income') balance += val;
-        else balance -= val;
-      }
-    });
-    return balance;
-  };
-
-  const debitBalance = getBalanceByType('debit');
-  const creditBalance = getBalanceByType('credit');
+  const debitBalance = getBalanceByType('debit', wallets, transactions);
+  const creditBalance = getBalanceByType('credit', wallets, transactions);
 
   return (
     <div>
@@ -47,7 +32,7 @@ export function TransactionsView() {
             <p className="text-secondary text-sm mb-2">Saldo em Débito</p>
             <div className="flex justify-between items-end">
               <h2 className="text-xl m-0" style={{ color: debitBalance < 0 ? '#ef4444' : '#6366f1' }}>
-                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(debitBalance)}
+                {formatCurrency(debitBalance)}
               </h2>
               <WalletCards size={20} style={{ color: '#6366f1' }} />
             </div>
@@ -57,7 +42,7 @@ export function TransactionsView() {
             <p className="text-secondary text-sm mb-2">Saldo em Crédito</p>
             <div className="flex justify-between items-end">
               <h2 className="text-xl m-0" style={{ color: creditBalance < 0 ? '#ef4444' : '#f59e0b' }}>
-                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(creditBalance)}
+                {formatCurrency(creditBalance)}
               </h2>
               <WalletCards size={20} style={{ color: '#f59e0b' }} />
             </div>
@@ -70,7 +55,7 @@ export function TransactionsView() {
             <p className="text-secondary text-sm mb-2">Entradas (Geral)</p>
             <div className="flex justify-between items-end">
               <h2 className="text-xl m-0" style={{ color: '#10b981' }}>
-                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalIncome)}
+                {formatCurrency(totalIncome)}
               </h2>
               <TrendingUp size={20} style={{ color: '#10b981' }} />
             </div>
@@ -80,7 +65,7 @@ export function TransactionsView() {
             <p className="text-secondary text-sm mb-2">Saídas (Geral)</p>
             <div className="flex justify-between items-end">
               <h2 className="text-xl m-0" style={{ color: '#ef4444' }}>
-                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalExpense)}
+                {formatCurrency(totalExpense)}
               </h2>
               <TrendingDown size={20} style={{ color: '#ef4444' }} />
             </div>

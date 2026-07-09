@@ -1,29 +1,16 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { PlusCircle, WalletCards, CreditCard, PiggyBank, ArrowLeft } from 'lucide-react';
 import { useWallets } from '../hooks/useWallets';
 import { useTransactions } from '../hooks/useTransactions';
 import { WalletForm } from './WalletForm';
 import { TransactionCard } from './TransactionCard';
+import { formatCurrency, getWalletBalance } from '../utils/finance';
 
 export function WalletsView() {
   const { wallets, addWallet, deleteWallet } = useWallets();
   const { transactions, deleteTransaction } = useTransactions();
   const [showForm, setShowForm] = useState(false);
   const [selectedWalletId, setSelectedWalletId] = useState(null);
-
-  // Calcula o saldo atual de cada carteira
-  const getWalletBalance = (walletId, initialBalance, type) => {
-    const walletTransactions = transactions.filter(t => t.walletId === walletId);
-    let balance = parseFloat(initialBalance) || 0;
-
-    walletTransactions.forEach(t => {
-      const amount = parseFloat(t.amount) || 0;
-      if (t.type === 'income') balance += amount;
-      if (t.type === 'expense') balance -= amount;
-    });
-
-    return balance;
-  };
 
   const getWalletIcon = (type) => {
     switch (type) {
@@ -51,7 +38,7 @@ export function WalletsView() {
       return null;
     }
 
-    const currentBalance = getWalletBalance(wallet.id, wallet.initialBalance, wallet.type);
+    const currentBalance = getWalletBalance(wallet.id, wallet.initialBalance, transactions);
     const walletColor = getWalletColor(wallet.type);
     const walletTransactions = transactions.filter(t => t.walletId === wallet.id);
 
@@ -86,7 +73,7 @@ export function WalletsView() {
           <div className="mt-6">
             <p className="text-secondary text-sm">Saldo Atual</p>
             <h1 className="text-5xl font-bold" style={{ color: currentBalance < 0 ? '#ef4444' : walletColor }}>
-              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(currentBalance)}
+              {formatCurrency(currentBalance)}
             </h1>
           </div>
         </div>
@@ -140,7 +127,7 @@ export function WalletsView() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {wallets.map(w => {
-            const balance = getWalletBalance(w.id, w.initialBalance, w.type);
+            const balance = getWalletBalance(w.id, w.initialBalance, transactions);
             const color = getWalletColor(w.type);
             return (
               <div
@@ -164,7 +151,7 @@ export function WalletsView() {
                 <div>
                   <p className="text-secondary text-sm">Saldo Atual</p>
                   <h2 className="text-2xl" style={{ color: balance < 0 ? '#ef4444' : color }}>
-                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(balance)}
+                    {formatCurrency(balance)}
                   </h2>
                 </div>
               </div>
