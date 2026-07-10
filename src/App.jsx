@@ -108,6 +108,7 @@ function App() {
 
             {showForm && (
               <SubscriptionForm
+                key={editingSubscription ? editingSubscription.id : 'new'}
                 initialData={editingSubscription}
                 onSave={handleSave}
                 onClose={() => {

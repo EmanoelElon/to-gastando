@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useWallets } from '../hooks/useWallets';
 
 export function SubscriptionForm({ initialData, onSave, onClose }) {
@@ -6,7 +6,15 @@ export function SubscriptionForm({ initialData, onSave, onClose }) {
 
   const [activeTab, setActiveTab] = useState(initialData?.cycle || 'monthly');
 
-  const [formData, setFormData] = useState(initialData || {
+  // O componente é remontado (via `key` no pai) sempre que `initialData` muda,
+  // então o estado inicial abaixo já reflete a assinatura correta sem precisar
+  // de um efeito para resincronizar.
+  const [formData, setFormData] = useState(() => initialData ? {
+    ...initialData,
+    dueMonth: initialData.dueMonth || (initialData.dueDate ? initialData.dueDate.split('-')[1] : '1'),
+    dueDay: initialData.dueDay || (initialData.dueDate ? initialData.dueDate.split('-')[2] : '1'),
+    walletId: initialData.walletId || (wallets.length > 0 ? wallets[0].id : '')
+  } : {
     name: '',
     price: '',
     category: 'Entretenimento',
@@ -17,30 +25,6 @@ export function SubscriptionForm({ initialData, onSave, onClose }) {
     description: '',
     walletId: wallets.length > 0 ? wallets[0].id : ''
   });
-
-  useEffect(() => {
-    if (initialData) {
-      setActiveTab(initialData.cycle || 'monthly');
-      setFormData({
-        ...initialData,
-        dueMonth: initialData.dueMonth || (initialData.dueDate ? initialData.dueDate.split('-')[1] : '1'),
-        dueDay: initialData.dueDay || (initialData.dueDate ? initialData.dueDate.split('-')[2] : '1'),
-        walletId: initialData.walletId || (wallets.length > 0 ? wallets[0].id : '')
-      });
-    } else {
-      setFormData({
-        name: '',
-        price: '',
-        category: 'Entretenimento',
-        cycle: activeTab,
-        dueDate: '',
-        dueMonth: '1',
-        dueDay: '1',
-        description: '',
-        walletId: wallets.length > 0 ? wallets[0].id : ''
-      });
-    }
-  }, [initialData, wallets, activeTab]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
